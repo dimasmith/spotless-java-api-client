@@ -11,7 +11,7 @@ configure<PublishingExtension> {
             pom {
                 name.set("Chessbot API")
                 description.set("Toy API for a chess bot that can validate chess moves and do unrelated stuff.")
-                url.set("https://www.github.com/stainless-sdks/spotless-java")
+                url.set("https://www.github.com/dimasmith/spotless-java-api-client")
 
                 licenses {
                     license {
@@ -26,9 +26,9 @@ configure<PublishingExtension> {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/stainless-sdks/spotless-java.git")
-                    developerConnection.set("scm:git:git://github.com/stainless-sdks/spotless-java.git")
-                    url.set("https://github.com/stainless-sdks/spotless-java")
+                    connection.set("scm:git:git://github.com/dimasmith/spotless-java-api-client.git")
+                    developerConnection.set("scm:git:git://github.com/dimasmith/spotless-java-api-client.git")
+                    url.set("https://github.com/dimasmith/spotless-java-api-client")
                 }
 
                 versionMapping {
