@@ -3,11 +3,7 @@
 package dev.knopitoshka.client
 
 import dev.knopitoshka.core.ClientOptions
-import dev.knopitoshka.core.RequestOptions
-import dev.knopitoshka.core.http.HttpResponse
-import dev.knopitoshka.models.ClientListVersionsParams
-import dev.knopitoshka.models.ClientRetrieveVersionDetailsParams
-import java.util.concurrent.CompletableFuture
+import dev.knopitoshka.services.async.GameServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -46,42 +42,7 @@ interface SpotlessClientAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SpotlessClientAsync
 
-    /** List API versions */
-    fun listVersions(): CompletableFuture<Void?> = listVersions(ClientListVersionsParams.none())
-
-    /** @see listVersions */
-    fun listVersions(
-        params: ClientListVersionsParams = ClientListVersionsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
-
-    /** @see listVersions */
-    fun listVersions(
-        params: ClientListVersionsParams = ClientListVersionsParams.none()
-    ): CompletableFuture<Void?> = listVersions(params, RequestOptions.none())
-
-    /** @see listVersions */
-    fun listVersions(requestOptions: RequestOptions): CompletableFuture<Void?> =
-        listVersions(ClientListVersionsParams.none(), requestOptions)
-
-    /** Show API version details */
-    fun retrieveVersionDetails(): CompletableFuture<Void?> =
-        retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none())
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(
-        params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(
-        params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none()
-    ): CompletableFuture<Void?> = retrieveVersionDetails(params, RequestOptions.none())
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(requestOptions: RequestOptions): CompletableFuture<Void?> =
-        retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none(), requestOptions)
+    fun games(): GameServiceAsync
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -110,50 +71,6 @@ interface SpotlessClientAsync {
             modifier: Consumer<ClientOptions.Builder>
         ): SpotlessClientAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /`, but is otherwise the same as
-         * [SpotlessClientAsync.listVersions].
-         */
-        fun listVersions(): CompletableFuture<HttpResponse> =
-            listVersions(ClientListVersionsParams.none())
-
-        /** @see listVersions */
-        fun listVersions(
-            params: ClientListVersionsParams = ClientListVersionsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
-
-        /** @see listVersions */
-        fun listVersions(
-            params: ClientListVersionsParams = ClientListVersionsParams.none()
-        ): CompletableFuture<HttpResponse> = listVersions(params, RequestOptions.none())
-
-        /** @see listVersions */
-        fun listVersions(requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            listVersions(ClientListVersionsParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /v2`, but is otherwise the same as
-         * [SpotlessClientAsync.retrieveVersionDetails].
-         */
-        fun retrieveVersionDetails(): CompletableFuture<HttpResponse> =
-            retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none())
-
-        /** @see retrieveVersionDetails */
-        fun retrieveVersionDetails(
-            params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
-
-        /** @see retrieveVersionDetails */
-        fun retrieveVersionDetails(
-            params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none()
-        ): CompletableFuture<HttpResponse> = retrieveVersionDetails(params, RequestOptions.none())
-
-        /** @see retrieveVersionDetails */
-        fun retrieveVersionDetails(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponse> =
-            retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none(), requestOptions)
+        fun games(): GameServiceAsync.WithRawResponse
     }
 }

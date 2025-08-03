@@ -2,12 +2,8 @@
 
 package dev.knopitoshka.client
 
-import com.google.errorprone.annotations.MustBeClosed
 import dev.knopitoshka.core.ClientOptions
-import dev.knopitoshka.core.RequestOptions
-import dev.knopitoshka.core.http.HttpResponse
-import dev.knopitoshka.models.ClientListVersionsParams
-import dev.knopitoshka.models.ClientRetrieveVersionDetailsParams
+import dev.knopitoshka.services.blocking.GameService
 import java.util.function.Consumer
 
 /**
@@ -46,40 +42,7 @@ interface SpotlessClient {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SpotlessClient
 
-    /** List API versions */
-    fun listVersions() = listVersions(ClientListVersionsParams.none())
-
-    /** @see listVersions */
-    fun listVersions(
-        params: ClientListVersionsParams = ClientListVersionsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
-
-    /** @see listVersions */
-    fun listVersions(params: ClientListVersionsParams = ClientListVersionsParams.none()) =
-        listVersions(params, RequestOptions.none())
-
-    /** @see listVersions */
-    fun listVersions(requestOptions: RequestOptions) =
-        listVersions(ClientListVersionsParams.none(), requestOptions)
-
-    /** Show API version details */
-    fun retrieveVersionDetails() = retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none())
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(
-        params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(
-        params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none()
-    ) = retrieveVersionDetails(params, RequestOptions.none())
-
-    /** @see retrieveVersionDetails */
-    fun retrieveVersionDetails(requestOptions: RequestOptions) =
-        retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none(), requestOptions)
+    fun games(): GameService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -104,55 +67,6 @@ interface SpotlessClient {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): SpotlessClient.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /`, but is otherwise the same as
-         * [SpotlessClient.listVersions].
-         */
-        @MustBeClosed
-        fun listVersions(): HttpResponse = listVersions(ClientListVersionsParams.none())
-
-        /** @see listVersions */
-        @MustBeClosed
-        fun listVersions(
-            params: ClientListVersionsParams = ClientListVersionsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
-
-        /** @see listVersions */
-        @MustBeClosed
-        fun listVersions(
-            params: ClientListVersionsParams = ClientListVersionsParams.none()
-        ): HttpResponse = listVersions(params, RequestOptions.none())
-
-        /** @see listVersions */
-        @MustBeClosed
-        fun listVersions(requestOptions: RequestOptions): HttpResponse =
-            listVersions(ClientListVersionsParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /v2`, but is otherwise the same as
-         * [SpotlessClient.retrieveVersionDetails].
-         */
-        @MustBeClosed
-        fun retrieveVersionDetails(): HttpResponse =
-            retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none())
-
-        /** @see retrieveVersionDetails */
-        @MustBeClosed
-        fun retrieveVersionDetails(
-            params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
-
-        /** @see retrieveVersionDetails */
-        @MustBeClosed
-        fun retrieveVersionDetails(
-            params: ClientRetrieveVersionDetailsParams = ClientRetrieveVersionDetailsParams.none()
-        ): HttpResponse = retrieveVersionDetails(params, RequestOptions.none())
-
-        /** @see retrieveVersionDetails */
-        @MustBeClosed
-        fun retrieveVersionDetails(requestOptions: RequestOptions): HttpResponse =
-            retrieveVersionDetails(ClientRetrieveVersionDetailsParams.none(), requestOptions)
+        fun games(): GameService.WithRawResponse
     }
 }

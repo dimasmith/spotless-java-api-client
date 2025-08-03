@@ -3,20 +3,9 @@
 package dev.knopitoshka.client
 
 import dev.knopitoshka.core.ClientOptions
-import dev.knopitoshka.core.RequestOptions
 import dev.knopitoshka.core.getPackageVersion
-import dev.knopitoshka.core.handlers.emptyHandler
-import dev.knopitoshka.core.handlers.errorBodyHandler
-import dev.knopitoshka.core.handlers.errorHandler
-import dev.knopitoshka.core.http.HttpMethod
-import dev.knopitoshka.core.http.HttpRequest
-import dev.knopitoshka.core.http.HttpResponse
-import dev.knopitoshka.core.http.HttpResponse.Handler
-import dev.knopitoshka.core.http.parseable
-import dev.knopitoshka.core.prepareAsync
-import dev.knopitoshka.models.ClientListVersionsParams
-import dev.knopitoshka.models.ClientRetrieveVersionDetailsParams
-import java.util.concurrent.CompletableFuture
+import dev.knopitoshka.services.async.GameServiceAsync
+import dev.knopitoshka.services.async.GameServiceAsyncImpl
 import java.util.function.Consumer
 
 class SpotlessClientAsyncImpl(private val clientOptions: ClientOptions) : SpotlessClientAsync {
@@ -36,6 +25,8 @@ class SpotlessClientAsyncImpl(private val clientOptions: ClientOptions) : Spotle
         WithRawResponseImpl(clientOptions)
     }
 
+    private val games: GameServiceAsync by lazy { GameServiceAsyncImpl(clientOptionsWithUserAgent) }
+
     override fun sync(): SpotlessClient = sync
 
     override fun withRawResponse(): SpotlessClientAsync.WithRawResponse = withRawResponse
@@ -43,27 +34,16 @@ class SpotlessClientAsyncImpl(private val clientOptions: ClientOptions) : Spotle
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SpotlessClientAsync =
         SpotlessClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun listVersions(
-        params: ClientListVersionsParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
-        // get /
-        withRawResponse().listVersions(params, requestOptions).thenAccept {}
-
-    override fun retrieveVersionDetails(
-        params: ClientRetrieveVersionDetailsParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
-        // get /v2
-        withRawResponse().retrieveVersionDetails(params, requestOptions).thenAccept {}
+    override fun games(): GameServiceAsync = games
 
     override fun close() = clientOptions.httpClient.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SpotlessClientAsync.WithRawResponse {
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+        private val games: GameServiceAsync.WithRawResponse by lazy {
+            GameServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -72,50 +52,6 @@ class SpotlessClientAsyncImpl(private val clientOptions: ClientOptions) : Spotle
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listVersionsHandler: Handler<Void?> = emptyHandler()
-
-        override fun listVersions(
-            params: ClientListVersionsParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { listVersionsHandler.handle(it) }
-                    }
-                }
-        }
-
-        private val retrieveVersionDetailsHandler: Handler<Void?> = emptyHandler()
-
-        override fun retrieveVersionDetails(
-            params: ClientRetrieveVersionDetailsParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v2")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { retrieveVersionDetailsHandler.handle(it) }
-                    }
-                }
-        }
+        override fun games(): GameServiceAsync.WithRawResponse = games
     }
 }

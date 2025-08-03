@@ -9,8 +9,8 @@ configure<PublishingExtension> {
             from(components["java"])
 
             pom {
-                name.set("Simple API overview")
-                description.set("An SDK library for spotless")
+                name.set("Chessbot API")
+                description.set("Toy API for a chess bot that can validate chess moves and do unrelated stuff.")
                 url.set("https://www.github.com/stainless-sdks/spotless-java")
 
                 licenses {

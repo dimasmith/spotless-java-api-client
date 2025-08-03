@@ -36,13 +36,14 @@ This library requires Java 8 or later.
 ```java
 import dev.knopitoshka.client.SpotlessClient;
 import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.models.games.GameStartParams;
+import dev.knopitoshka.models.games.GameStartResponse;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
 // Or configures using the `SPOTLESS_API_KEY` and `SPOTLESS_BASE_URL` environment variables
 SpotlessClient client = SpotlessOkHttpClient.fromEnv();
 
-client.listVersions();
+GameStartResponse response = client.games().start();
 ```
 
 ## Client configuration
@@ -115,7 +116,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the Spotless API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.listVersions(...)` should be called with an instance of `ClientListVersionsParams`, and it will return an instance of `Response`.
+For example, `client.games().start(...)` should be called with an instance of `GameStartParams`, and it will return an instance of `GameStartResponse`.
 
 ## Immutability
 
@@ -132,14 +133,15 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import dev.knopitoshka.client.SpotlessClient;
 import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.models.games.GameStartParams;
+import dev.knopitoshka.models.games.GameStartResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
 // Or configures using the `SPOTLESS_API_KEY` and `SPOTLESS_BASE_URL` environment variables
 SpotlessClient client = SpotlessOkHttpClient.fromEnv();
 
-CompletableFuture<Void?> future = client.async().listVersions();
+CompletableFuture<GameStartResponse> response = client.async().games().start();
 ```
 
 Or create an asynchronous client from the beginning:
@@ -147,14 +149,15 @@ Or create an asynchronous client from the beginning:
 ```java
 import dev.knopitoshka.client.SpotlessClientAsync;
 import dev.knopitoshka.client.okhttp.SpotlessOkHttpClientAsync;
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.models.games.GameStartParams;
+import dev.knopitoshka.models.games.GameStartResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
 // Or configures using the `SPOTLESS_API_KEY` and `SPOTLESS_BASE_URL` environment variables
 SpotlessClientAsync client = SpotlessOkHttpClientAsync.fromEnv();
 
-CompletableFuture<Void?> future = client.listVersions();
+CompletableFuture<GameStartResponse> response = client.games().start();
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -167,13 +170,22 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 
 ```java
 import dev.knopitoshka.core.http.Headers;
-import dev.knopitoshka.core.http.HttpResponse;
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.core.http.HttpResponseFor;
+import dev.knopitoshka.models.games.GameStartParams;
+import dev.knopitoshka.models.games.GameStartResponse;
 
-HttpResponse response = client.withRawResponse().listVersions();
+HttpResponseFor<GameStartResponse> response = client.games().withRawResponse().start();
 
 int statusCode = response.statusCode();
 Headers headers = response.headers();
+```
+
+You can still deserialize the response into an instance of a Java class if needed:
+
+```java
+import dev.knopitoshka.models.games.GameStartResponse;
+
+GameStartResponse parsedResponse = response.parse();
 ```
 
 ## Error handling
@@ -269,7 +281,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-client.listVersions(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
+import dev.knopitoshka.models.games.GameStartResponse;
+
+GameStartResponse response = client.games().start(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
 
 Or configure the default for all method calls at the client level:
@@ -372,9 +386,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import dev.knopitoshka.core.JsonValue;
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.models.games.GameStartParams;
 
-ClientListVersionsParams params = ClientListVersionsParams.builder()
+GameStartParams params = GameStartParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -386,9 +400,9 @@ These can be accessed on the built object later using the `_additionalHeaders()`
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](spotless-java-core/src/main/kotlin/dev/knopitoshka/core/Values.kt) object to its setter:
 
 ```java
-import dev.knopitoshka.models.ClientListVersionsParams;
+import dev.knopitoshka.models.games.GameStartParams;
 
-ClientListVersionsParams params = ClientListVersionsParams.builder().build();
+GameStartParams params = GameStartParams.builder().build();
 ```
 
 The most straightforward way to create a [`JsonValue`](spotless-java-core/src/main/kotlin/dev/knopitoshka/core/Values.kt) is using its `from(...)` method:
@@ -438,7 +452,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import dev.knopitoshka.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.listVersions(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.games().start(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -466,21 +480,22 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 
 ```java
 import dev.knopitoshka.core.JsonField;
+import dev.knopitoshka.models.games.GameStartParams;
 import java.util.Optional;
 
-JsonField<Object> field = client.listVersions(params)._field();
+JsonField<GameStartParams.PlayAs> playAs = client.games().start(params)._playAs();
 
-if (field.isMissing()) {
+if (playAs.isMissing()) {
   // The property is absent from the JSON response
-} else if (field.isNull()) {
+} else if (playAs.isNull()) {
   // The property was set to literal null
 } else {
   // Check if value was provided as a string
   // Other methods include `asNumber()`, `asBoolean()`, etc.
-  Optional<String> jsonString = field.asString();
+  Optional<String> jsonString = playAs.asString();
 
   // Try to deserialize into a custom type
-  MyClass myObject = field.asUnknown().orElseThrow().convert(MyClass.class);
+  MyClass myObject = playAs.asUnknown().orElseThrow().convert(MyClass.class);
 }
 ```
 
@@ -493,13 +508,17 @@ By default, the SDK will not throw an exception in this case. It will throw [`Sp
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-Response response = client.listVersions(params).validate();
+import dev.knopitoshka.models.games.GameStartResponse;
+
+GameStartResponse response = client.games().start(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-client.listVersions(RequestOptions.builder().responseValidation(true).build());
+import dev.knopitoshka.models.games.GameStartResponse;
+
+GameStartResponse response = client.games().start(RequestOptions.builder().responseValidation(true).build());
 ```
 
 Or configure the default for all method calls at the client level:
