@@ -1,27 +1,27 @@
 # Spotless Java API Library
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.spotless.api/spotless-java)](https://central.sonatype.com/artifact/com.spotless.api/spotless-java/0.0.1-alpha.0)
-[![javadoc](https://javadoc.io/badge2/com.spotless.api/spotless-java/0.0.1-alpha.0/javadoc.svg)](https://javadoc.io/doc/com.spotless.api/spotless-java/0.0.1-alpha.0)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.knopitoshka/spotless-java)](https://central.sonatype.com/artifact/dev.knopitoshka/spotless-java/0.0.1-alpha.0)
+[![javadoc](https://javadoc.io/badge2/dev.knopitoshka/spotless-java/0.0.1-alpha.0/javadoc.svg)](https://javadoc.io/doc/dev.knopitoshka/spotless-java/0.0.1-alpha.0)
 
 The Spotless Java SDK provides convenient access to the Spotless REST API from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.spotless.api/spotless-java/0.0.1-alpha.0).
+Javadocs are available on [javadoc.io](https://javadoc.io/doc/dev.knopitoshka/spotless-java/0.0.1-alpha.0).
 
 ## Installation
 
 ### Gradle
 
 ```kotlin
-implementation("com.spotless.api:spotless-java:0.0.1-alpha.0")
+implementation("dev.knopitoshka:spotless-java:0.0.1-alpha.0")
 ```
 
 ### Maven
 
 ```xml
 <dependency>
-  <groupId>com.spotless.api</groupId>
+  <groupId>dev.knopitoshka</groupId>
   <artifactId>spotless-java</artifactId>
   <version>0.0.1-alpha.0</version>
 </dependency>
@@ -34,9 +34,9 @@ This library requires Java 8 or later.
 ## Usage
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.models.ClientListVersionsParams;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
 // Or configures using the `SPOTLESS_API_KEY` and `SPOTLESS_BASE_URL` environment variables
@@ -50,8 +50,8 @@ client.listVersions();
 Configure the client using system properties or environment variables:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
 // Or configures using the `SPOTLESS_API_KEY` and `SPOTLESS_BASE_URL` environment variables
@@ -61,8 +61,8 @@ SpotlessClient client = SpotlessOkHttpClient.fromEnv();
 Or manually:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
     .apiKey("My API Key")
@@ -72,8 +72,8 @@ SpotlessClient client = SpotlessOkHttpClient.builder()
 Or using a combination of the two approaches:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
     // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
@@ -101,7 +101,7 @@ System properties take precedence over environment variables.
 To temporarily use a modified client configuration, while reusing the same connection and thread pools, call `withOptions()` on any client or service:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
+import dev.knopitoshka.client.SpotlessClient;
 
 SpotlessClient clientWithOptions = client.withOptions(optionsBuilder -> {
     optionsBuilder.baseUrl("https://example.com");
@@ -130,9 +130,9 @@ Because each class is immutable, builder modification will _never_ affect alread
 The default client is synchronous. To switch to asynchronous execution, call the `async()` method:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.models.ClientListVersionsParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
@@ -145,9 +145,9 @@ CompletableFuture<Void?> future = client.async().listVersions();
 Or create an asynchronous client from the beginning:
 
 ```java
-import com.spotless.api.client.SpotlessClientAsync;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClientAsync;
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.client.SpotlessClientAsync;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClientAsync;
+import dev.knopitoshka.models.ClientListVersionsParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `spotless.apiKey` and `spotless.baseUrl` system properties
@@ -166,9 +166,9 @@ The SDK defines methods that deserialize responses into instances of Java classe
 To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
 
 ```java
-import com.spotless.api.core.http.Headers;
-import com.spotless.api.core.http.HttpResponse;
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.core.http.Headers;
+import dev.knopitoshka.core.http.HttpResponse;
+import dev.knopitoshka.models.ClientListVersionsParams;
 
 HttpResponse response = client.withRawResponse().listVersions();
 
@@ -180,26 +180,26 @@ Headers headers = response.headers();
 
 The SDK throws custom unchecked exception types:
 
-- [`SpotlessServiceException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+- [`SpotlessServiceException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                                                                                                                      |
-  | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
-  | 400    | [`BadRequestException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/BadRequestException.kt)                     |
-  | 401    | [`UnauthorizedException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/UnauthorizedException.kt)                 |
-  | 403    | [`PermissionDeniedException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/PermissionDeniedException.kt)         |
-  | 404    | [`NotFoundException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/NotFoundException.kt)                         |
-  | 422    | [`UnprocessableEntityException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/UnprocessableEntityException.kt)   |
-  | 429    | [`RateLimitException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/RateLimitException.kt)                       |
-  | 5xx    | [`InternalServerException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/InternalServerException.kt)             |
-  | others | [`UnexpectedStatusCodeException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/UnexpectedStatusCodeException.kt) |
+  | Status | Exception                                                                                                                     |
+  | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/UnexpectedStatusCodeException.kt) |
 
-- [`SpotlessIoException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessIoException.kt): I/O networking errors.
+- [`SpotlessIoException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessIoException.kt): I/O networking errors.
 
-- [`SpotlessRetryableException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+- [`SpotlessRetryableException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessRetryableException.kt): Generic error indicating a failure that could be retried by the client.
 
-- [`SpotlessInvalidDataException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+- [`SpotlessInvalidDataException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
-- [`SpotlessException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+- [`SpotlessException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Logging
 
@@ -229,7 +229,7 @@ The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON seri
 
 The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
 
-If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClientAsync.kt).
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClientAsync.kt).
 
 > [!CAUTION]
 > We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
@@ -253,8 +253,8 @@ The API may also explicitly instruct the SDK to retry or not retry a request.
 To set a custom number of retries, configure the client using the `maxRetries` method:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
     .fromEnv()
@@ -275,8 +275,8 @@ client.listVersions(RequestOptions.builder().timeout(Duration.ofSeconds(30)).bui
 Or configure the default for all method calls at the client level:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 import java.time.Duration;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
@@ -290,8 +290,8 @@ SpotlessClient client = SpotlessOkHttpClient.builder()
 To route requests through a proxy, configure the client using the `proxy` method:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -314,8 +314,8 @@ SpotlessClient client = SpotlessOkHttpClient.builder()
 To configure how HTTPS connections are secured, configure the client using the `sslSocketFactory`, `trustManager`, and `hostnameVerifier` methods:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
     .fromEnv()
@@ -333,10 +333,10 @@ The SDK consists of three artifacts:
 - `spotless-java-core`
   - Contains core SDK logic
   - Does not depend on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`SpotlessClient`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClient.kt), [`SpotlessClientAsync`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientAsync.kt), [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientImpl.kt), and [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientAsyncImpl.kt), all of which can work with any HTTP client
+  - Exposes [`SpotlessClient`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClient.kt), [`SpotlessClientAsync`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientAsync.kt), [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientImpl.kt), and [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientAsyncImpl.kt), all of which can work with any HTTP client
 - `spotless-java-client-okhttp`
   - Depends on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClient.kt) and [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClientAsync.kt), which provide a way to construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientImpl.kt) and [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientAsyncImpl.kt), respectively, using OkHttp
+  - Exposes [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClient.kt) and [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClientAsync.kt), which provide a way to construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientImpl.kt) and [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientAsyncImpl.kt), respectively, using OkHttp
 - `spotless-java`
   - Depends on and exposes the APIs of both `spotless-java-core` and `spotless-java-client-okhttp`
   - Does not have its own logic
@@ -351,16 +351,16 @@ This structure allows replacing the SDK's default HTTP client without pulling in
 To use a customized `OkHttpClient`:
 
 1. Replace your [`spotless-java` dependency](#installation) with `spotless-java-core`
-2. Copy `spotless-java-client-okhttp`'s [`OkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/OkHttpClient.kt) class into your code and customize it
-3. Construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientImpl.kt) or [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientAsyncImpl.kt), similarly to [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClientAsync.kt), using your customized client
+2. Copy `spotless-java-client-okhttp`'s [`OkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientImpl.kt) or [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientAsyncImpl.kt), similarly to [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClientAsync.kt), using your customized client
 
 ### Completely custom HTTP client
 
 To use a completely custom HTTP client:
 
 1. Replace your [`spotless-java` dependency](#installation) with `spotless-java-core`
-2. Write a class that implements the [`HttpClient`](spotless-java-core/src/main/kotlin/com/spotless/api/core/http/HttpClient.kt) interface
-3. Construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientImpl.kt) or [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/com/spotless/api/client/SpotlessClientAsyncImpl.kt), similarly to [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/com/spotless/api/client/okhttp/SpotlessOkHttpClientAsync.kt), using your new client class
+2. Write a class that implements the [`HttpClient`](spotless-java-core/src/main/kotlin/dev/knopitoshka/core/http/HttpClient.kt) interface
+3. Construct [`SpotlessClientImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientImpl.kt) or [`SpotlessClientAsyncImpl`](spotless-java-core/src/main/kotlin/dev/knopitoshka/client/SpotlessClientAsyncImpl.kt), similarly to [`SpotlessOkHttpClient`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClient.kt) or [`SpotlessOkHttpClientAsync`](spotless-java-client-okhttp/src/main/kotlin/dev/knopitoshka/client/okhttp/SpotlessOkHttpClientAsync.kt), using your new client class
 
 ## Undocumented API functionality
 
@@ -371,8 +371,8 @@ The SDK is typed for convenient usage of the documented API. However, it also su
 To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQueryParam`, or `putAdditionalBodyProperty` methods on any `Params` class:
 
 ```java
-import com.spotless.api.core.JsonValue;
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.core.JsonValue;
+import dev.knopitoshka.models.ClientListVersionsParams;
 
 ClientListVersionsParams params = ClientListVersionsParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
@@ -383,18 +383,18 @@ ClientListVersionsParams params = ClientListVersionsParams.builder()
 
 These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](spotless-java-core/src/main/kotlin/com/spotless/api/core/Values.kt) object to its setter:
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](spotless-java-core/src/main/kotlin/dev/knopitoshka/core/Values.kt) object to its setter:
 
 ```java
-import com.spotless.api.models.ClientListVersionsParams;
+import dev.knopitoshka.models.ClientListVersionsParams;
 
 ClientListVersionsParams params = ClientListVersionsParams.builder().build();
 ```
 
-The most straightforward way to create a [`JsonValue`](spotless-java-core/src/main/kotlin/com/spotless/api/core/Values.kt) is using its `from(...)` method:
+The most straightforward way to create a [`JsonValue`](spotless-java-core/src/main/kotlin/dev/knopitoshka/core/Values.kt) is using its `from(...)` method:
 
 ```java
-import com.spotless.api.core.JsonValue;
+import dev.knopitoshka.core.JsonValue;
 import java.util.List;
 import java.util.Map;
 
@@ -435,7 +435,7 @@ JsonValue complexValue = JsonValue.from(Map.of(
 To access undocumented response properties, call the `_additionalProperties()` method:
 
 ```java
-import com.spotless.api.core.JsonValue;
+import dev.knopitoshka.core.JsonValue;
 import java.util.Map;
 
 Map<String, JsonValue> additionalProperties = client.listVersions(params)._additionalProperties();
@@ -465,7 +465,7 @@ String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
 To access a property's raw JSON value, which may be undocumented, call its `_` prefixed method:
 
 ```java
-import com.spotless.api.core.JsonField;
+import dev.knopitoshka.core.JsonField;
 import java.util.Optional;
 
 JsonField<Object> field = client.listVersions(params)._field();
@@ -488,7 +488,7 @@ if (field.isMissing()) {
 
 In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-By default, the SDK will not throw an exception in this case. It will throw [`SpotlessInvalidDataException`](spotless-java-core/src/main/kotlin/com/spotless/api/errors/SpotlessInvalidDataException.kt) only if you directly access the property.
+By default, the SDK will not throw an exception in this case. It will throw [`SpotlessInvalidDataException`](spotless-java-core/src/main/kotlin/dev/knopitoshka/errors/SpotlessInvalidDataException.kt) only if you directly access the property.
 
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
@@ -505,8 +505,8 @@ client.listVersions(RequestOptions.builder().responseValidation(true).build());
 Or configure the default for all method calls at the client level:
 
 ```java
-import com.spotless.api.client.SpotlessClient;
-import com.spotless.api.client.okhttp.SpotlessOkHttpClient;
+import dev.knopitoshka.client.SpotlessClient;
+import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient;
 
 SpotlessClient client = SpotlessOkHttpClient.builder()
     .fromEnv()
