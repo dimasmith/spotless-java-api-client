@@ -2,7 +2,10 @@
 
 package dev.knopitoshka.proguard
 
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import dev.knopitoshka.client.okhttp.SpotlessOkHttpClient
+import dev.knopitoshka.core.jsonMapper
+import dev.knopitoshka.models.games.GameStartResponse
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -44,5 +47,20 @@ internal class ProGuardCompatibilityTest {
         val client = SpotlessOkHttpClient.builder().apiKey("My API Key").build()
 
         assertThat(client).isNotNull()
+        assertThat(client.games()).isNotNull()
+    }
+
+    @Test
+    fun gameStartResponseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val gameStartResponse = GameStartResponse.builder().gameId("gameId").build()
+
+        val roundtrippedGameStartResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(gameStartResponse),
+                jacksonTypeRef<GameStartResponse>(),
+            )
+
+        assertThat(roundtrippedGameStartResponse).isEqualTo(gameStartResponse)
     }
 }

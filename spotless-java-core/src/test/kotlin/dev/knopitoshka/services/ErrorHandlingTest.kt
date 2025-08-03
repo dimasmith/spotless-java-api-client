@@ -3,7 +3,7 @@
 package dev.knopitoshka.services
 
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
-import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.status
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
@@ -18,9 +18,11 @@ import dev.knopitoshka.errors.InternalServerException
 import dev.knopitoshka.errors.NotFoundException
 import dev.knopitoshka.errors.PermissionDeniedException
 import dev.knopitoshka.errors.RateLimitException
+import dev.knopitoshka.errors.SpotlessException
 import dev.knopitoshka.errors.UnauthorizedException
 import dev.knopitoshka.errors.UnexpectedStatusCodeException
 import dev.knopitoshka.errors.UnprocessableEntityException
+import dev.knopitoshka.models.games.GameStartParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
 import org.junit.jupiter.api.BeforeEach
@@ -57,16 +59,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions400() {
-        val spotlessClient = client
+    fun gamesStart400() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(400).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<BadRequestException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<BadRequestException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(400)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -74,16 +84,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions400WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart400WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(400).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<BadRequestException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<BadRequestException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(400)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -91,16 +109,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions401() {
-        val spotlessClient = client
+    fun gamesStart401() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(401).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnauthorizedException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnauthorizedException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(401)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -108,16 +134,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions401WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart401WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(401).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnauthorizedException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnauthorizedException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(401)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -125,16 +159,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions403() {
-        val spotlessClient = client
+    fun gamesStart403() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(403).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<PermissionDeniedException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<PermissionDeniedException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(403)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -142,16 +184,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions403WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart403WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(403).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<PermissionDeniedException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<PermissionDeniedException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(403)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -159,16 +209,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions404() {
-        val spotlessClient = client
+    fun gamesStart404() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(404).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<NotFoundException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<NotFoundException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(404)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -176,16 +234,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions404WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart404WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(404).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<NotFoundException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<NotFoundException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(404)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -193,16 +259,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions422() {
-        val spotlessClient = client
+    fun gamesStart422() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(422).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnprocessableEntityException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnprocessableEntityException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(422)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -210,16 +284,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions422WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart422WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(422).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnprocessableEntityException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnprocessableEntityException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(422)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -227,16 +309,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions429() {
-        val spotlessClient = client
+    fun gamesStart429() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(429).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<RateLimitException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<RateLimitException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(429)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -244,16 +334,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions429WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart429WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(429).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<RateLimitException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<RateLimitException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(429)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -261,16 +359,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions500() {
-        val spotlessClient = client
+    fun gamesStart500() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(500).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<InternalServerException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<InternalServerException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(500)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -278,16 +384,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions500WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart500WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(500).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<InternalServerException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<InternalServerException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(500)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -295,16 +409,24 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions999() {
-        val spotlessClient = client
+    fun gamesStart999() {
+        val gameService = client.games()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(999).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnexpectedStatusCodeException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnexpectedStatusCodeException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(999)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -312,20 +434,49 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun clientListVersions999WithRawResponse() {
-        val spotlessClient = client.withRawResponse()
+    fun gamesStart999WithRawResponse() {
+        val gameService = client.games().withRawResponse()
         stubFor(
-            get(anyUrl())
+            post(anyUrl())
                 .willReturn(
                     status(999).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
                 )
         )
 
-        val e = assertThrows<UnexpectedStatusCodeException> { spotlessClient.listVersions() }
+        val e =
+            assertThrows<UnexpectedStatusCodeException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
 
         assertThat(e.statusCode()).isEqualTo(999)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
         assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun gamesStartInvalidJsonBody() {
+        val gameService = client.games()
+        stubFor(
+            post(anyUrl())
+                .willReturn(status(200).withHeader(HEADER_NAME, HEADER_VALUE).withBody(NOT_JSON))
+        )
+
+        val e =
+            assertThrows<SpotlessException> {
+                gameService.start(
+                    GameStartParams.builder()
+                        .playAs(GameStartParams.PlayAs.WHITE)
+                        .timeControl(GameStartParams.TimeControl.BLITZ)
+                        .build()
+                )
+            }
+
+        assertThat(e).hasMessage("Error reading response")
     }
 
     private fun Headers.toMap(): Map<String, List<String>> =
