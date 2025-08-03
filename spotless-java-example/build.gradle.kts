@@ -19,7 +19,7 @@ tasks.withType<JavaCompile>().configureEach {
 application {
     // Use `./gradlew :spotless-java-example:run` to run `Main`
     // Use `./gradlew :spotless-java-example:run -Dexample=Something` to run `SomethingExample`
-    mainClass = "com.spotless.api.example.${
+    mainClass = "dev.knopitoshka.example.${
         if (project.hasProperty("example"))
             "${project.property("example")}Example"
         else
